@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-patchboard-text-pad = "patchboard_text_pad.__main__:main"
+textpad = "patchboard_text_pad.__main__:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
