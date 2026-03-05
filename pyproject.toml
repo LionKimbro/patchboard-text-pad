@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "patchboard-text-pad"
+version = "0.1.0"
+description = "Simple Patchboard text emitter and receiver."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+  "lionscliapp",
+]
+
+[project.scripts]
+patchboard-text-pad = "patchboard_text_pad.__main__:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
