@@ -15,8 +15,10 @@ app.describe_app("Simple Patchboard text emitter and receiver")
 app.declare_projectdir(".textpad")
 app.declare_key("path.inbox", ".textpad/inbox")
 app.declare_key("path.outbox", ".textpad/outbox")
+app.declare_key("component.title", "Text Pad")
 app.describe_key("path.inbox", "Directory to poll for incoming Patchboard messages")
 app.describe_key("path.outbox", "Directory to write outgoing Patchboard messages")
+app.describe_key("component.title", "Human-readable title for this component instance")
 
 
 # ---- globals ----
@@ -75,8 +77,34 @@ def on_clear_clicked():
     g["text"].delete("1.0", tk.END)
 
 
+def build_id_card():
+    inbox = g["inbox"]
+    outbox = g["outbox"]
+    return {
+        "schema_version": 1,
+        "title": app.ctx["component.title"],
+        "inbox": str(inbox.resolve()),
+        "outbox": str(outbox.resolve()),
+        "channels": {
+            "in": ["text"],
+            "out": ["text", "component-id-card"],
+        },
+    }
+
+
+def emit_id_card():
+    card = build_id_card()
+    write_message_to_outbox("component-id-card", card)
+    project_dir = g["inbox"].parent
+    (project_dir / "component-id-card.json").write_text(
+        json.dumps(card, indent=2), encoding="utf-8"
+    )
+
+
 def on_emit_card_clicked():
-    pass
+    emit_id_card()
+    now = datetime.now().strftime("%H:%M:%S")
+    set_status(f"emitted component-id-card, at {now}")
 
 
 def on_emit_text_clicked():
@@ -152,6 +180,7 @@ def run_gui():
     g["outbox"] = outbox
 
     build_gui()
+    emit_id_card()
     g["root"].after(500, poll_inbox)
     g["root"].mainloop()
 
