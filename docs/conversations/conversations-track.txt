@@ -1,0 +1,63 @@
+date: 2026-02-22
+title: Conversations Tracking
+
+
+== First Use Stub ==
+date: 2026-02-22
+
+1. Replace <PRE> with a three letter prefix for your project.
+2. Populate Links Log "pre-conversation"
+3. Populate a conversational header
+9. Delete this First Use Stub
+
+
+== Overall Architecture ==
+date: 2026-02-22
+
+  <PRE>-ARCH: Architecture
+  * summaries               High-level space: * continuity                 * design philosophy
+  * decisions                                 * architectural decisions    * architectural evolution
+  * stabilized insights                       * system-level direction     * major decisions
+                                              * invariant reasoning        * ental model
+                                                                           * corrections
+                                                                           * system topology
+
+  Specialized Working Threads
+    <PRE>-EFFECTS  Effects Execution
+    <PRE>-ENG      Core Engine ("Reducer")
+    <PRE>-WORKER   Worker Thread
+    <PRE>-UI       User Interface
+    <PRE>-FILES    Clipboard & Files
+    <PRE>-TEST     Automated Testing
+    <PRE>-PACKAGE  Packaging
+    <PRE>-AWS      AWS in General
+    <PRE>-MQTT     AWS MQTT
+    <PRE>-S3       AWS S3
+    <PRE>-CONN     AWS ConnSrv
+    <PRE>-CONVO    Conversation about the Conversation
+
+
+  To-Do Threads
+    <PRE>-TODO
+
+
+  Sandbox Threads       * disposable scratch threads
+    <PRE>-LAB-1           * large quantities of code
+    <PRE>-LAB-2           * trial architectures
+    ...                 * temporary confusions
+                        * emotional or free thinking
+                        * summarize back into Arch later
+                        * NEVER canoncial
+
+
+
+== Conversational Header Design ==
+date: 2026-02-22
+
+{
+}
+
+== Links Log ==
+date: 2026-02-22
+
+pre-conversation: https://chatgpt.com/c/... -- exploratory

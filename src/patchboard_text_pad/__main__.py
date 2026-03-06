@@ -87,7 +87,7 @@ def build_id_card():
         "outbox": str(outbox.resolve()),
         "channels": {
             "in": ["text"],
-            "out": ["text", "component-id-card"],
+            "out": ["text", "json", "component-id-card"],
         },
     }
 
@@ -107,11 +107,35 @@ def on_emit_card_clicked():
     set_status(f"emitted component-id-card, at {now}")
 
 
+def try_parse_json(text):
+    """Returns (parsed, None) on success, or (None, error_string) on failure."""
+    try:
+        return json.loads(text), None
+    except json.JSONDecodeError as e:
+        return None, f"JSON error at line {e.lineno}, col {e.colno}: {e.msg}"
+
+
 def on_emit_text_clicked():
     text = g["text"].get("1.0", tk.END).rstrip("\n")
     write_message_to_outbox("text", text)
     now = datetime.now().strftime("%H:%M:%S")
-    set_status(f"emitted to channel 'text', at {now}")
+    parsed, _ = try_parse_json(text)
+    if parsed is not None:
+        write_message_to_outbox("json", parsed)
+        set_status(f"emitted to channels 'text' and 'json', at {now}")
+    else:
+        set_status(f"emitted to channel 'text', at {now}")
+
+
+def on_emit_json_clicked():
+    text = g["text"].get("1.0", tk.END).rstrip("\n")
+    parsed, err = try_parse_json(text)
+    if err:
+        set_status(err)
+        return
+    write_message_to_outbox("json", parsed)
+    now = datetime.now().strftime("%H:%M:%S")
+    set_status(f"emitted to channel 'json', at {now}")
 
 
 # ---- GUI ----
@@ -130,6 +154,8 @@ def build_gui():
     menubar.add_cascade(label="File", menu=file_menu, underline=0)
     patchboard_menu = tk.Menu(menubar, tearoff=False)
     patchboard_menu.add_command(label="Emit: text", command=on_emit_text_clicked,
+                                underline=6, accelerator="Ctrl+Enter")
+    patchboard_menu.add_command(label="Emit: json", command=on_emit_json_clicked,
                                 underline=6, accelerator="Ctrl+Enter")
     patchboard_menu.add_command(label="Emit: card", command=on_emit_card_clicked,
                                 underline=6)
@@ -158,7 +184,8 @@ def build_gui():
     btn_frame = ttk.Frame(frame)
     btn_frame.grid(row=1, column=0, columnspan=2, sticky="w", pady=(4, 0))
     ttk.Button(btn_frame, text="Clear", command=on_clear_clicked).grid(row=0, column=0, padx=(0, 4))
-    ttk.Button(btn_frame, text="emit: text", command=on_emit_text_clicked).grid(row=0, column=1)
+    ttk.Button(btn_frame, text="emit: text", command=on_emit_text_clicked).grid(row=0, column=1, padx=(0, 4))
+    ttk.Button(btn_frame, text="emit: json", command=on_emit_json_clicked).grid(row=0, column=2)
 
     # status bar
     status_var = tk.StringVar()
